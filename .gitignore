@@ -3,3 +3,9 @@ __pycache__/
 .DS_Store
 *.dta
 *.smcl
+
+!research/data/*.dta
+!research/stata/*.smcl
+research/stata/local-analysis.smcl
+research/r/*.html
+research/r/*_files/

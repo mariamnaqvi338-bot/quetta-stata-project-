@@ -21,8 +21,12 @@ class DataIntegrity(unittest.TestCase):
         unclassified = sum(r['n'] - r['labor_force_n'] - r['not_in_labor_force_n'] for r in self.rows)
         self.assertEqual(unclassified, 3143)
 
+    def test_district_totals(self):
+        for district, expected in [(1,4691), (2,2255), (3,2706)]:
+            self.assertEqual(sum(r['n'] for r in self.rows if r['district']==district), expected)
+
     def test_no_identifiers(self):
-        allowed = {'age','region','gender','education','marital','n','weight'}
+        allowed = {'district','age','region','gender','education','marital','n','weight'}
         for k in ['employed','unemployed','not_in_labor_force','labor_force','student_status']:
             allowed.update([k, k + '_n'])
         for r in self.rows:

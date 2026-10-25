@@ -1,42 +1,105 @@
-# Quetta Labor Force Observatory
+# Labor Force Structure in Quetta Division
 
-An interactive dashboard of **Syeda Mariam Naqvi’s ECON 322 project**, exploring the Pakistan Bureau of Statistics Labor Force Survey 2020–21 for Quetta Division, Balochistan.
+**Syeda Mariam Naqvi**
 
-## Run locally
+An independent empirical study of employment, educational attainment, and demographic differences in Quetta Division, Balochistan, Pakistan.
 
-Requires Python 3; the dashboard has no build step or JavaScript dependencies.
+## Abstract
+
+This repository brings together a research report, Stata analytical materials, the underlying Quetta extract of Pakistan’s Labor Force Survey (LFS) 2020–21, and an interactive dashboard. The study examines how economic activity, educational attainment, and marital status vary across age, gender, and rural–urban settlement categories. The analytical sample comprises **9,652 respondents** across Quetta, Pishin, and Killa Abdullah, using the division definition represented in the supplied survey extract. Weighted descriptive statistics complement the report’s unweighted hypothesis tests. The results describe associations within a cross-sectional survey; they do not identify causal mechanisms.
+
+## Research questions
+
+1. How are employment and unemployment distributed across age groups?
+2. How do educational attainment and economic activity differ by gender and settlement type?
+3. How are marital status, education, and employment associated within the observed sample?
+
+## Interactive dashboard
+
+The dashboard combines a monochrome visual design with violet and amber accents. Users may select age, gender, settlement type, and district; switch between weighted estimates and sample counts; explore labor-force, education, and demographic panels; and download filtered age summaries. A Pakistan locator highlights the three study locations, with clickable markers linked to district filters. The map provides geographic orientation rather than district boundaries or a choropleth. Zoom controls and equivalent keyboard-accessible district buttons are available.
+
+For local use, run from the repository root:
 
 ```sh
 python -m http.server 8000 --directory .
 ```
 
-Open http://localhost:8000 in your browser. Use region, gender, age, and weighting controls to explore employment, education, students, marital status, and population. Export filtered age summaries as CSV. Keyboard users can navigate tabs using arrow keys, Home, and End.
+Open `http://localhost:8000` on the same computer. For the hosted version, use the URL provided under repository **Settings → Pages**. Deployment from `main`, `/ (root)` requires no build process, backend, or API credentials.
 
-## Publish with GitHub Pages
+## Research materials
 
-In repository **Settings → Pages**, select **Deploy from a branch**, choose the branch containing this dashboard and **/ (root)**, then save. GitHub will show the public URL after deployment. No backend or API key is required.
+| Material | Location | Description |
+| --- | --- | --- |
+| Research report | [PDF](research/report/quetta-labor-force-report.pdf) · [Word](research/report/quetta-labor-force-report.docx) | Full narrative analysis, tables, and figures |
+| Supplied Stata commands | [analysis.do](research/stata/analysis.do) | Historical analysis script; retains its original Windows input path |
+| Supplied Stata output | [analysis.smcl](research/stata/analysis.smcl) | Historical output log; open with Stata Viewer |
+| Portable Stata runner | [run-analysis.do](research/stata/run-analysis.do) | Additional runner for descriptive tables and selected tests using the included prepared extract |
+| Survey extract | [quetta-lfs-2020-21.dta](research/data/quetta-lfs-2020-21.dta) | Supplied respondent-level Quetta dataset, approximately 18 MB |
+| R Markdown companion | [quetta-analysis.Rmd](research/r/quetta-analysis.Rmd) | Newly authored descriptive companion; not an original uploaded file |
+| Dashboard aggregates | [quetta.json](data/quetta.json) | 725 aggregate cells used by the browser |
+| Data preparation | [prepare_data.py](scripts/prepare_data.py) | Rebuilds the dashboard aggregates from the supplied extract |
 
-## Data and interpretation
+Report cover presentation and introductory Stata comment headers were adapted for independent publication. The report’s analytical text, historical Stata commands and results, and the binary `.dta` dataset have not been substantively revised. Historical scripts and log paths may reference the author’s original local environment.
 
-`data/quetta.json` contains 353 aggregate cells derived from 9,652 respondents in the supplied Quetta `.dta` file. It contains no household identifiers or individual records. Raw uploads, report, and Stata log are not redistributed. Aggregation is not a formal statistical disclosure-control process; assess PBS redistribution terms before broader reuse.
+## Data and measurement
 
-Counts sum the original `Weights` in weighted mode and count respondents in sample mode. Existing project indicators are preserved. There are 2,121 employed and 98 unemployed sample respondents; 4,290 are flagged outside the labor force and 3,143 are unclassified (ages 0–9). These last records are retained rather than counted as outside the labor force.
+**Source:** Pakistan Bureau of Statistics, *Labor Force Survey 2020–21*, Quetta Division extract supplied by the author. Division code `41` is identified by the first two characters of `PCode`. The survey extract explicitly names the districts `QUETTA`, `PISHIN`, and `KILLA ABDULLAH`; district filters use those names rather than an assumed current administrative geography.
 
-Participation is labor force / selected population, including children if selected; it is **not a conventional working-age LFPR**. Unemployment is unemployed / labor force. Missing or unmapped education and marital categories remain visible. Education names reproduce the project mapping rather than an independently verified PBS codebook. No survey-design uncertainty estimates are computed. Reported hypothesis tests are separately labeled, unweighted, quoted results and do not change with filters. The dashboard does not reproduce unsupported causal claims from the report.
+The dashboard preserves the supplied derived variables: `age_group`, `edu_level`, `employed`, `unemployed`, `not_in_labor_force`, `labor_force`, `student_status`, `marital_status`, and `gender`. Weighted counts sum `Weights`; sample counts enumerate respondents. The extract contains 2,121 employed respondents, 98 unemployed respondents, and 4,290 respondents flagged outside the labor force. A further 3,143 respondents aged 0–9 are unclassified by those indicators and are retained explicitly.
 
-To rebuild the aggregate file from your private source data, install `requirements-data.txt` and run:
+- **Labor force:** respondents flagged as employed or unemployed.
+- **Participation:** labor force divided by the entire selected population. When children are selected, this differs from a conventional working-age labor force participation rate.
+- **Unemployment rate:** unemployed divided by the selected labor force.
+- **Education:** the original mapping of `S4C9` codes 1–7 is reproduced. Labels have not been independently checked against the PBS codebook; missing and unmapped categories remain visible.
+
+The separate research-notes panel quotes selected unweighted tests from the report. They do not update with dashboard filters and have not been independently replicated as complex-survey tests. Reported `0.000` p-values are displayed as `<0.001`.
+
+## Reproducibility
+
+### Dashboard data
+
+Python 3 and the packages in `requirements-data.txt` are needed only to regenerate aggregates:
 
 ```sh
-python scripts/prepare_data.py /path/to/271056957.dta
-```
-
-The source SHA-256 is recorded in the JSON for reproducibility. Raw data is not needed to view the dashboard. Fonts use Google Fonts when available, with local system fallbacks; no external chart libraries, analytics, or API calls are used.
-
-## Validation
-
-```sh
+python -m pip install -r requirements-data.txt
+python scripts/prepare_data.py research/data/quetta-lfs-2020-21.dta
 python -m unittest discover -s tests
 node --check app.js
 ```
 
-Browser smoke checks additionally cover filters, all tabs, CSV downloads, mobile layout, and console errors.
+The aggregate JSON records the SHA-256 of the source dataset. Viewing the dashboard requires only a browser and static HTTP hosting.
+
+### Stata
+
+From the repository root, in an installed Stata environment:
+
+```stata
+do research/stata/run-analysis.do
+```
+
+The portable runner uses existing variables in the prepared dataset; the historical `analysis.do` instead expects an original raw input at a Windows-specific path and generates those variables. Neither Stata execution nor statistical-test replication has been validated in this environment because Stata is unavailable.
+
+### R Markdown
+
+The companion requires R, `rmarkdown`, `knitr`, `haven`, `dplyr`, `ggplot2`, and Pandoc. From the repository root:
+
+```r
+install.packages(c("rmarkdown", "knitr", "haven", "dplyr", "ggplot2"))
+rmarkdown::render("research/r/quetta-analysis.Rmd")
+```
+
+Rendering has not been validated in this environment because R is unavailable. The R Markdown companion is an additional implementation, rather than an uploaded source artifact.
+
+## Limitations and data stewardship
+
+The findings pertain to the supplied 2020–21 extract and its survey geography. No survey-design standard errors or confidence intervals are calculated by the dashboard, and small subgroups may produce unstable estimates. The report’s narrative interpretations should be considered alongside the descriptive evidence; association does not demonstrate causation.
+
+The dashboard consumes aggregated data, but the separately downloadable `.dta` is the supplied respondent-level file and retains survey identifiers. It should not be described as anonymized. Consult the Pakistan Bureau of Statistics’ applicable access and redistribution terms before further redistribution; this repository does not assign a new license to the source survey data.
+
+## Geographic attribution
+
+The locally bundled Pakistan outline comes from [johan/world.geo.json](https://github.com/johan/world.geo.json/blob/master/countries/PAK.geo.json), a Natural Earth-derived dataset. It is a generalized cartographic locator, not an authoritative statement of boundaries or territorial status. District point locations are approximate. Rural and urban are survey classifications, not mapped polygons. Google Fonts are optional, with local system-font fallbacks; the map and charts require no external service.
+
+## Validation
+
+Automated checks verify sample totals, weighted indicator partitions, permitted aggregate fields, and district totals. Browser smoke checks cover combined filters, selectable map markers, zoom, topic panels, CSV export, download links, mobile overflow, and JavaScript errors. These checks validate the dashboard implementation rather than the underlying survey instrument or the report’s inferential claims.

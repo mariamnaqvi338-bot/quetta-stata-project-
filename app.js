@@ -2,7 +2,7 @@
 const ages=['0–9','10–19','20–29','30–39','40–49','50–59','60–69','70–79','80–89','90+'];
 const education=['Unclassified','No formal education','Below primary','Primary','Middle','Matric','Intermediate','Graduation'];
 const marital=['Unclassified','Never married','Married','Widow / widower','Divorced'];
-const colors=['#276c55','#83a77a','#d59b65','#bdc6b5'];
+const colors=['#18181b','#a78bfa','#e7ac4b','#b6b6bc'];
 const $=id=>document.getElementById(id);
 let dataset,tab='labor',current=[];
 const number=n=>new Intl.NumberFormat('en',{maximumFractionDigits:0}).format(n);
@@ -17,9 +17,10 @@ function bars(groups,key='population'){
 }
 function card(title,subtitle,content,extra=''){return `<article class="card ${extra}"><h3>${title}</h3><p class="subtitle">${subtitle}</p>${content}</article>`;}
 function render(){
- current=dataset.rows.filter(r=>['region','gender','age'].every(k=>!+$ (k).value||r[k]===+$ (k).value));
+ current=dataset.rows.filter(r=>['district','region','gender','age'].every(k=>!+$(k).value||r[k]===+$(k).value));
+ syncMap();
  const n=sum(current,'n'),population=val(current),lf=val(current,'labor_force'),unemployed=val(current,'unemployed');
- $('selection').textContent=['region','gender','age'].filter(k=>+$(k).value).map(k=>$(k).selectedOptions[0].text).join(' · ')||'All respondents';
+ $('selection').textContent=['district','region','gender','age'].filter(k=>+$(k).value).map(k=>$(k).selectedOptions[0].text).join(' · ')||'All respondents';
  $('sample-note').textContent=`${number(n)} respondents · ${weighted()?'Survey-weighted estimates':'Unweighted sample counts'}`;
  const kpis=[['Selected population',number(population),weighted()?'Sum of survey weights':'Respondents in selected sample'],['Labor force',number(lf),`${percent(lf,population)} of selected population`],['Unemployment rate',percent(unemployed,lf),'Unemployed ÷ labor force'],['Female population share',percent(val(current.filter(r=>r.gender===2)),population),'Female ÷ selected population']];
  $('kpis').innerHTML=kpis.map(([label,value,note])=>`<article class="kpi"><span class="label">${label}</span><strong>${value}</strong><small>${note}</small></article>`).join('');
@@ -39,15 +40,41 @@ function render(){
  $('table-body').innerHTML=groups.map(g=>`<tr><td>${g.label}</td>${['population','employed','unemployed','labor_force','not_in_labor_force'].map(k=>`<td>${number(val(g.rows,k))}</td>`).join('')}</tr>`).join('');
 }
 ages.forEach((label,i)=>$('age').add(new Option(label,i+1)));
-['region','gender','age','measure'].forEach(k=>$(k).addEventListener('change',render));
-$('reset').addEventListener('click',()=>{['region','gender','age'].forEach(k=>$(k).value='0');$('measure').value='weighted';render();});
+['district','region','gender','age','measure'].forEach(k=>$(k).addEventListener('change',render));
+$('reset').addEventListener('click',()=>{['district','region','gender','age'].forEach(k=>$(k).value='0');$('measure').value='weighted';render();});
 document.querySelectorAll('[data-tab]').forEach(button=>{
  button.addEventListener('click',()=>{tab=button.dataset.tab;document.querySelectorAll('[data-tab]').forEach(b=>b.setAttribute('aria-selected',b===button?'true':'false'));$('panel').setAttribute('aria-labelledby',button.id);render();});
  button.addEventListener('keydown',e=>{if(!['ArrowLeft','ArrowRight','Home','End'].includes(e.key))return;e.preventDefault();const tabs=[...document.querySelectorAll('[data-tab]')],i=tabs.indexOf(button);const next=e.key==='Home'?0:e.key==='End'?tabs.length-1:(i+(e.key==='ArrowRight'?1:-1)+tabs.length)%tabs.length;tabs[next].focus();tabs[next].click();});
 });
 $('download').addEventListener('click',()=>{
- const header=['age_group','measure','region_filter','gender_filter','age_filter','sample_n','population','employed','unemployed','labor_force','outside_labor_force'];
- const lines=byAge().map(g=>[g.label,$('measure').value,...['region','gender','age'].map(k=>$(k).selectedOptions[0].text),sum(g.rows,'n'),...['population','employed','unemployed','labor_force','not_in_labor_force'].map(k=>val(g.rows,k))]);
+ const header=['age_group','measure','district_filter','region_filter','gender_filter','age_filter','sample_n','population','employed','unemployed','labor_force','outside_labor_force'];
+ const lines=byAge().map(g=>[g.label,$('measure').value,...['district','region','gender','age'].map(k=>$(k).selectedOptions[0].text),sum(g.rows,'n'),...['population','employed','unemployed','labor_force','not_in_labor_force'].map(k=>val(g.rows,k))]);
  const blob=new Blob([[header,...lines].map(row=>row.join(',')).join('\n')],{type:'text/csv;charset=utf-8'}),url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download='quetta-filtered-summary.csv';a.click();setTimeout(()=>URL.revokeObjectURL(url),1000);
 });
 fetch('data/quetta.json').then(r=>{if(!r.ok)throw Error('Data unavailable');return r.json();}).then(data=>{dataset=data;render();$('loading').hidden=true;$('dashboard').hidden=false;}).catch(()=>{$('loading').textContent='Could not load survey data. Serve this folder with a local web server and reload.';});
+
+function syncMap(){
+ const selected=+$('district').value;
+ document.querySelectorAll('[data-district]').forEach(b=>{const active=+b.dataset.district===selected;b.classList.toggle('active',active);b.setAttribute('aria-pressed',String(active));});
+ document.querySelectorAll('[data-region]').forEach(b=>b.setAttribute('aria-pressed',String(+b.dataset.region===+$('region').value)));
+ $('map-selection').textContent=selected?`${$('district').selectedOptions[0].text} selected · charts updated`:'All three districts selected';
+ document.querySelectorAll('.district-marker').forEach(m=>m.classList.toggle('selected',!selected||+m.dataset.id===selected));
+}
+document.querySelectorAll('[data-district]').forEach(b=>b.addEventListener('click',()=>{if(!dataset)return;$('district').value=b.dataset.district;render();}));
+document.querySelectorAll('[data-region]').forEach(b=>b.addEventListener('click',()=>{if(!dataset)return;$('region').value=b.dataset.region;render();}));
+let zoom=1;
+function setZoom(value){zoom=Math.max(1,Math.min(2.5,value));const w=560/zoom,h=430/zoom;$('pakistan-map').setAttribute('viewBox',`${280-w/2} ${215-h/2} ${w} ${h}`);}
+$('map-in').addEventListener('click',()=>setZoom(zoom+.25));
+$('map-out').addEventListener('click',()=>setZoom(zoom-.25));
+$('map-reset').addEventListener('click',()=>setZoom(1));
+fetch('data/pakistan.geojson').then(r=>{if(!r.ok)throw Error();return r.json();}).then(geo=>{
+ const project=([lon,lat])=>[50+(lon-60)*24,400-(lat-24)*28];
+ const ringPath=ring=>ring.map((p,i)=>(i?'L':'M')+project(p).join(',')).join(' ')+' Z';
+ const outlines=geo.features.map(f=>{const polygons=f.geometry.type==='Polygon'?[f.geometry.coordinates]:f.geometry.coordinates;return `<path class="country-outline" d="${polygons.flatMap(p=>p.map(ringPath)).join(' ')}"/>`;}).join('');
+ const places=[{id:1,name:'Quetta',p:[66.99,30.18],y:260},{id:2,name:'Pishin',p:[66.99,30.58],y:213},{id:3,name:'Killa Abdullah',p:[66.66,30.73],y:166}];
+ const markers=places.map(place=>{const [x,y]=project(place.p);return `<g class="district-marker selected" data-id="${place.id}" role="button" tabindex="0" aria-label="Filter to ${place.name}"><title>Select ${place.name}</title><path class="leader" d="M${x},${y} L310,${place.y} L340,${place.y}"/><circle class="marker-hit" cx="${x}" cy="${y}" r="10"/><circle class="marker-dot" cx="${x}" cy="${y}" r="4"/><rect class="marker-label" x="340" y="${place.y-15}" width="143" height="30" rx="4"/><text x="351" y="${place.y+4}">${place.name} ↗</text></g>`;}).join('');
+ const [qx,qy]=project([66.99,30.18]);
+ $('pakistan-map').innerHTML=`<defs><pattern id="map-grid" width="20" height="20" patternUnits="userSpaceOnUse"><circle cx="1" cy="1" r=".7" fill="#ddd"/></pattern></defs><rect x="0" y="0" width="560" height="430" fill="url(#map-grid)"/>${outlines}<text x="255" y="99" class="country-label">PAKISTAN</text><text x="120" y="266" class="province-label">BALOCHISTAN</text><circle class="study-halo" cx="${qx}" cy="${qy-7}" r="28"/>${markers}<text x="60" y="403" class="sea-label">ARABIAN SEA</text>`;
+ document.querySelectorAll('.district-marker').forEach(m=>{const select=()=>{if(!dataset)return;$('district').value=m.dataset.id;render();};m.addEventListener('click',select);m.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();select();}});});
+ syncMap();
+}).catch(()=>{$('pakistan-map').outerHTML='<p class="empty">Map could not load. Use the district buttons to explore the study area.</p>';});
