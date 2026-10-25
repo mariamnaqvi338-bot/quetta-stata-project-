@@ -35,4 +35,4 @@ with (out / 'summary_tables.csv').open('w', newline='', encoding='utf-8') as han
         value['participation_full_population_pct'] = 100*lf/population if population else ''
         value['unemployment_rate_pct'] = 100*value['unemployed_weighted']/lf if lf else ''
         writer.writerow({k:round(v,6) if isinstance(v,float) else v for k,v in value.items()})
-print('Exported 20 descriptive summary rows (total and separate age, district, settlement, gender breakdowns).')
+print('Exported 18 descriptive summary rows (total and separate age, district, settlement, gender breakdowns).')
