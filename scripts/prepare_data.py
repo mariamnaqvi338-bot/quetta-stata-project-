@@ -21,7 +21,7 @@ for group, frame in d.groupby(keys, dropna=False):
         n=len(frame), weight=float(frame.Weights.sum()),
         **{m: float(frame[m + '_weighted'].sum()) for m in measures},
         **{m + '_n': int(frame[m].sum()) for m in measures}))
-result = {'source': 'Pakistan Bureau of Statistics · LFS 2020–21',
+result = {'source': 'Uploaded Quetta extract; report identifies LFS 2020–21; author identifies World Bank WDI (citation unresolved)',
           'division': 'Quetta (41)', 'sample': len(d),
           'source_sha256': hashlib.sha256(source.read_bytes()).hexdigest(), 'rows': rows}
 target = Path(__file__).resolve().parents[1] / 'data' / 'quetta.json'

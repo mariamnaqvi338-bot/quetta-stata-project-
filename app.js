@@ -4,16 +4,16 @@ const education=['Unclassified','No formal education','Below primary','Primary',
 const marital=['Unclassified','Never married','Married','Widow / widower','Divorced'];
 const colors=['#18181b','#a78bfa','#e7ac4b','#b6b6bc'];
 const $=id=>document.getElementById(id);
-let dataset,tab='labor',current=[];
+let dataset,tab='labor',current=[],chartMetric='employed',chartMode='count';
 const number=n=>new Intl.NumberFormat('en',{maximumFractionDigits:0}).format(n);
 const percent=(a,b)=>b?`${(a/b*100).toFixed(1)}%`:'—';
 const sum=(rows,key)=>rows.reduce((s,r)=>s+r[key],0);
 const weighted=()=>$('measure').value==='weighted';
 const val=(rows,key='population')=>sum(rows,key==='population'?(weighted()?'weight':'n'):(weighted()?key:key+'_n'));
 const byAge=()=>ages.map((label,i)=>({label,rows:current.filter(r=>r.age===i+1)}));
-function bars(groups,key='population'){
- const values=groups.map(g=>val(g.rows,key)),max=Math.max(...values,1);
- return `<div class="bars">${groups.map((g,i)=>`<div class="bar-row"><span>${g.label}</span><div class="track" title="${g.label}: ${number(values[i])}"><div class="fill" style="width:${values[i]/max*100}%"></div></div><span class="bar-value">${number(values[i])}</span></div>`).join('')}</div>`;
+function bars(groups,key='population',share=false){
+ const values=groups.map(g=>val(g.rows,key)),total=values.reduce((a,b)=>a+b,0),max=share?Math.max(total,1):Math.max(...values,1);
+ return `<div class="bars">${groups.map((g,i)=>`<div class="bar-row"><span>${g.label}</span><div class="track" tabindex="0" role="img" aria-label="${g.label}: ${number(values[i])}, ${percent(values[i],total)} of displayed total" title="${g.label}: ${number(values[i])} · ${percent(values[i],total)} of displayed total"><div class="fill" style="width:${values[i]/max*100}%"></div></div><span class="bar-value">${share?percent(values[i],total):number(values[i])}</span></div>`).join('')}</div>`;
 }
 function card(title,subtitle,content,extra=''){return `<article class="card ${extra}"><h3>${title}</h3><p class="subtitle">${subtitle}</p>${content}</article>`;}
 function render(){
@@ -28,7 +28,7 @@ function render(){
  if(tab==='labor'){
   const status=[['Employed',val(current,'employed')],['Unemployed',unemployed],['Outside labor force',val(current,'not_in_labor_force')],['Unclassified',Math.max(0,population-lf-val(current,'not_in_labor_force'))]];
   const content=status.map(([label,v],i)=>`<div class="status-row"><div><span><i class="dot" style="background:${colors[i]}"></i>${label}</span><span>${number(v)} · ${percent(v,population)}</span></div><div class="track"><div class="fill" style="width:${population?v/population*100:0}%;background:${colors[i]}"></div></div></div>`).join('');
-  $('panel').innerHTML=`<div class="chart-grid">${card('Where employment is concentrated',`${unit} by age group · bar lengths show counts`,bars(groups,'employed'))}${card('A snapshot of economic activity','Shares of the full selected population',content+`<p class="insight">${n<30?'Small sample: fewer than 30 respondents. Interpret estimates cautiously.':`Labor force participation is <strong>${percent(lf,population)}</strong> in this selection.`} The denominator includes children when selected. Unclassified records are retained.</p>`)}</div>`;
+  $('panel').innerHTML=`<div class="chart-grid">${card('Economic activity by age',`${unit} · ${chartMode==='share'?'share of the selected indicator total, not an age-specific rate':'counts by age group'}`,`<div class="chart-controls"><label>Indicator<select id="chart-metric">${[['employed','Employed'],['unemployed','Unemployed'],['labor_force','Labor force'],['not_in_labor_force','Outside labor force']].map(([v,t])=>`<option value="${v}" ${chartMetric===v?'selected':''}>${t}</option>`).join('')}</select></label><label>Display<select id="chart-mode"><option value="count" ${chartMode==='count'?'selected':''}>Counts</option><option value="share" ${chartMode==='share'?'selected':''}>Share of total (%)</option></select></label></div>`+bars(groups,chartMetric,chartMode==='share'))}${card('A snapshot of economic activity','Shares of the full selected population',content+`<p class="insight">${n<30?'Small sample: fewer than 30 respondents. Interpret estimates cautiously.':`Labor force participation is <strong>${percent(lf,population)}</strong> in this selection.`} The denominator includes children when selected. Unclassified records are retained.</p>`)}</div>`;
  }else if(tab==='education'){
   $('panel').innerHTML=`<div class="chart-grid">${card('Educational attainment',`${unit} · categories follow the original project`,bars(education.map((label,i)=>({label,rows:current.filter(r=>r.education===i)}))),'wide-labels')}${card('Students across generations',`${unit} · student_status from the supplied project`,bars(groups,'student_status'))}</div>`;
  }else if(tab==='demographics'){
@@ -37,6 +37,7 @@ function render(){
   const tests=[['Marital status × region','0.514','Not significant'],['Marital status × employment','<0.001','Significant'],['Education × gender','<0.001','Significant'],['Education × region','<0.001','Significant'],['Employment × gender','<0.001','Significant'],['Employment × region','0.687','Not significant'],['Female employment × region','0.004','Significant']];
   $('panel').innerHTML=card('From the original research','Reported results · full Quetta sample · these results do not change with dashboard filters',`<div class="research"><p>The report examines age, gender, region, education, and employment using the 2020–21 Labor Force Survey. The dashboard recomputes descriptive counts from the supplied dataset rather than copying narrative percentages.</p><div class="table-wrap"><table><thead><tr><th>Chi-square comparison</th><th>Reported p-value</th><th>At α = 0.05</th></tr></thead><tbody>${tests.map(t=>`<tr>${t.map((v,i)=>`<${i?'td':'th'}>${v}</${i?'td':'th'}>`).join('')}</tr>`).join('')}</tbody></table></div><p>These are selected unweighted tests quoted from the submitted report, not independently rerun survey-design tests. “0.000” in the report is displayed as p &lt; 0.001. Statistical association does not establish a causal explanation.</p><p><strong>Read the charts carefully:</strong> a share of all unemployed people in an age group is different from the unemployment rate within that age group. This dashboard labels denominators explicitly.</p></div>`);
  }
+ if($('chart-metric')){$('chart-metric').addEventListener('change',e=>{chartMetric=e.target.value;render();});$('chart-mode').addEventListener('change',e=>{chartMode=e.target.value;render();});}
  $('table-body').innerHTML=groups.map(g=>`<tr><td>${g.label}</td>${['population','employed','unemployed','labor_force','not_in_labor_force'].map(k=>`<td>${number(val(g.rows,k))}</td>`).join('')}</tr>`).join('');
 }
 ages.forEach((label,i)=>$('age').add(new Option(label,i+1)));

@@ -6,7 +6,7 @@ An independent empirical study of employment, educational attainment, and demogr
 
 ## Abstract
 
-This repository brings together a research report, Stata analytical materials, the underlying Quetta extract of Pakistan’s Labor Force Survey (LFS) 2020–21, and an interactive dashboard. The study examines how economic activity, educational attainment, and marital status vary across age, gender, and rural–urban settlement categories. The analytical sample comprises **9,652 respondents** across Quetta, Pishin, and Killa Abdullah, using the division definition represented in the supplied survey extract. Weighted descriptive statistics complement the report’s unweighted hypothesis tests. The results describe associations within a cross-sectional survey; they do not identify causal mechanisms.
+This repository brings together a research report, Stata analytical materials, the underlying uploaded Quetta labor-force extract, and an interactive dashboard. The study examines how economic activity, educational attainment, and marital status vary across age, gender, and rural–urban settlement categories. The analytical sample comprises **9,652 respondents** across Quetta, Pishin, and Killa Abdullah, using the division definition represented in the supplied survey extract. Weighted descriptive statistics complement the report’s unweighted hypothesis tests. The results describe associations within a cross-sectional survey; they do not identify causal mechanisms.
 
 ## Research questions
 
@@ -34,16 +34,16 @@ Open `http://localhost:8000` on the same computer. For the hosted version, use t
 | Supplied Stata commands | [analysis.do](research/stata/analysis.do) | Historical analysis script; retains its original Windows input path |
 | Supplied Stata output | [analysis.smcl](research/stata/analysis.smcl) | Historical output log; open with Stata Viewer |
 | Portable Stata runner | [run-analysis.do](research/stata/run-analysis.do) | Additional runner for descriptive tables and selected tests using the included prepared extract |
+| Redesigned figures | [PDF](research/figures/research-figures.pdf) · [PNG files](research/figures/) | Recomputed economic-activity, education, and settlement comparisons |
 | Survey extract | [quetta-lfs-2020-21.dta](research/data/quetta-lfs-2020-21.dta) | Supplied respondent-level Quetta dataset, approximately 18 MB |
-| R Markdown companion | [quetta-analysis.Rmd](research/r/quetta-analysis.Rmd) | Newly authored descriptive companion; not an original uploaded file |
 | Dashboard aggregates | [quetta.json](data/quetta.json) | 725 aggregate cells used by the browser |
 | Data preparation | [prepare_data.py](scripts/prepare_data.py) | Rebuilds the dashboard aggregates from the supplied extract |
 
-Report cover presentation and introductory Stata comment headers were adapted for independent publication. The report’s analytical text, historical Stata commands and results, and the binary `.dta` dataset have not been substantively revised. Historical scripts and log paths may reference the author’s original local environment.
+The report’s cover/title page has been removed from the PDF and Word copies, and introductory Stata comment headers were adapted for independent publication. A supplementary section adds redesigned, independently recomputed descriptive figures; the original body and its historical charts are retained. The report’s analytical body, historical Stata commands and results, and the binary `.dta` dataset have not been substantively revised. Historical scripts and log paths may reference the author’s original local environment.
 
 ## Data and measurement
 
-**Source:** Pakistan Bureau of Statistics, *Labor Force Survey 2020–21*, Quetta Division extract supplied by the author. Division code `41` is identified by the first two characters of `PCode`. The survey extract explicitly names the districts `QUETTA`, `PISHIN`, and `KILLA ABDULLAH`; district filters use those names rather than an assumed current administrative geography.
+**Provenance under clarification:** The author identifies World Bank *World Development Indicators* (WDI) as the source. The uploaded report and Stata materials identify *Labor Force Survey 2020–21*, and the supplied `.dta` contains respondent-level Quetta records. These are different data products. The dashboard uses the supplied `.dta`; a WDI URL or indicator codes are needed to reconcile the citation. No WDI series have been substituted or invented. Division code `41` is identified by the first two characters of `PCode`. The survey extract explicitly names the districts `QUETTA`, `PISHIN`, and `KILLA ABDULLAH`; district filters use those names rather than an assumed current administrative geography.
 
 The dashboard preserves the supplied derived variables: `age_group`, `edu_level`, `employed`, `unemployed`, `not_in_labor_force`, `labor_force`, `student_status`, `marital_status`, and `gender`. Weighted counts sum `Weights`; sample counts enumerate respondents. The extract contains 2,121 employed respondents, 98 unemployed respondents, and 4,290 respondents flagged outside the labor force. A further 3,143 respondents aged 0–9 are unclassified by those indicators and are retained explicitly.
 
@@ -63,6 +63,7 @@ Python 3 and the packages in `requirements-data.txt` are needed only to regenera
 ```sh
 python -m pip install -r requirements-data.txt
 python scripts/prepare_data.py research/data/quetta-lfs-2020-21.dta
+python scripts/render_figures.py
 python -m unittest discover -s tests
 node --check app.js
 ```
@@ -79,22 +80,11 @@ do research/stata/run-analysis.do
 
 The portable runner uses existing variables in the prepared dataset; the historical `analysis.do` instead expects an original raw input at a Windows-specific path and generates those variables. Neither Stata execution nor statistical-test replication has been validated in this environment because Stata is unavailable.
 
-### R Markdown
-
-The companion requires R, `rmarkdown`, `knitr`, `haven`, `dplyr`, `ggplot2`, and Pandoc. From the repository root:
-
-```r
-install.packages(c("rmarkdown", "knitr", "haven", "dplyr", "ggplot2"))
-rmarkdown::render("research/r/quetta-analysis.Rmd")
-```
-
-Rendering has not been validated in this environment because R is unavailable. The R Markdown companion is an additional implementation, rather than an uploaded source artifact.
-
 ## Limitations and data stewardship
 
 The findings pertain to the supplied 2020–21 extract and its survey geography. No survey-design standard errors or confidence intervals are calculated by the dashboard, and small subgroups may produce unstable estimates. The report’s narrative interpretations should be considered alongside the descriptive evidence; association does not demonstrate causation.
 
-The dashboard consumes aggregated data, but the separately downloadable `.dta` is the supplied respondent-level file and retains survey identifiers. It should not be described as anonymized. Consult the Pakistan Bureau of Statistics’ applicable access and redistribution terms before further redistribution; this repository does not assign a new license to the source survey data.
+The dashboard consumes aggregated data, but the separately downloadable `.dta` is the supplied respondent-level file and retains survey identifiers. It should not be described as anonymized. Consult the originating data provider’s applicable access and redistribution terms before further redistribution; this repository does not assign a new license to the source survey data.
 
 ## Geographic attribution
 
@@ -103,3 +93,7 @@ The locally bundled Pakistan outline comes from [johan/world.geo.json](https://g
 ## Validation
 
 Automated checks verify sample totals, weighted indicator partitions, permitted aggregate fields, and district totals. Browser smoke checks cover combined filters, selectable map markers, zoom, topic panels, CSV export, download links, mobile overflow, and JavaScript errors. These checks validate the dashboard implementation rather than the underlying survey instrument or the report’s inferential claims.
+
+## Figure design
+
+Redesigned figures use readable labels, a consistent monochrome/violet/amber palette, sample-size context, and explicit denominators. Employment and unemployment counts use separate panels because their scales differ substantially. Education compares weighted distributions within gender, including unclassified records; settlement panels show full-population participation and labor-force unemployment separately. These supplementary figures describe the entire uploaded sample, while browser charts respond to filters. Source attribution remains subject to the provenance clarification above.

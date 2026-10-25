@@ -7,5 +7,3 @@ __pycache__/
 !research/data/*.dta
 !research/stata/*.smcl
 research/stata/local-analysis.smcl
-research/r/*.html
-research/r/*_files/
