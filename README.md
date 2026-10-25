@@ -22,7 +22,7 @@ See [analytical scope and variable construction](research/METHODS.md) for the ex
 
 ## Interactive dashboard
 
-The dashboard combines a monochrome visual design with violet and amber accents. Users may select age, gender, settlement type, and district; switch between weighted estimates and sample counts; explore labor-force, education, and demographic panels; and download filtered age summaries. A Pakistan locator highlights the three study locations, with clickable markers linked to district filters. The map provides geographic orientation rather than district boundaries or a choropleth. Zoom controls and equivalent keyboard-accessible district buttons are available.
+The dashboard combines a monochrome visual design with violet and amber accents. Users may select age, gender, settlement type, and district; switch between weighted estimates and sample counts; explore labor-force, education, and demographic panels; and download filtered age summaries. A colorful Pakistan district map highlights the three study locations, with clickable district shapes and markers linked to filters. Historical boundaries provide geographic context rather than an exact representation of the 2020–21 survey geography. Colors distinguish areas and do not encode statistical values. Zoom controls and equivalent keyboard-accessible district buttons are available.
 
 For local use, run from the repository root:
 
@@ -96,7 +96,7 @@ The dashboard consumes aggregated data, but the separately downloadable `.dta` i
 
 ## Geographic attribution
 
-The locally bundled Pakistan outline comes from [johan/world.geo.json](https://github.com/johan/world.geo.json/blob/master/countries/PAK.geo.json), a Natural Earth-derived dataset. It is a generalized cartographic locator, not an authoritative statement of boundaries or territorial status. District point locations are approximate. Rural and urban are survey classifications, not mapped polygons. Google Fonts are optional, with local system-font fallbacks; the map and charts require no external service.
+The locally bundled Pakistan outline comes from [johan/world.geo.json](https://github.com/johan/world.geo.json/blob/master/countries/PAK.geo.json), a Natural Earth-derived dataset. It is a generalized cartographic locator, not an authoritative statement of boundaries or territorial status. The atlas-style district layer is simplified from [Click That Hood’s Pakistan dataset](https://github.com/codeforgermany/click_that_hood/blob/main/public/data/pakistan.geojson), attributed there to DIVA-GIS. These historical district geometries may differ from survey or current boundaries. District point locations are approximate. Rural and urban are survey classifications, not mapped polygons. Google Fonts are optional, with local system-font fallbacks; the map and charts require no external service.
 
 ## Validation
 

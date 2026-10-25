@@ -59,7 +59,7 @@ function syncMap(){
  document.querySelectorAll('[data-district]').forEach(b=>{const active=+b.dataset.district===selected;b.classList.toggle('active',active);b.setAttribute('aria-pressed',String(active));});
  document.querySelectorAll('[data-region]').forEach(b=>b.setAttribute('aria-pressed',String(+b.dataset.region===+$('region').value)));
  $('map-selection').textContent=selected?`${$('district').selectedOptions[0].text} selected · charts updated`:'All three districts selected';
- document.querySelectorAll('.district-marker').forEach(m=>m.classList.toggle('selected',!selected||+m.dataset.id===selected));
+ document.querySelectorAll('.district-marker, .study-district').forEach(m=>{m.classList.toggle('selected',!selected||+m.dataset.id===selected);m.setAttribute('aria-pressed',String(!selected||+m.dataset.id===selected));});
 }
 document.querySelectorAll('[data-district]').forEach(b=>b.addEventListener('click',()=>{if(!dataset)return;$('district').value=b.dataset.district;render();}));
 document.querySelectorAll('[data-region]').forEach(b=>b.addEventListener('click',()=>{if(!dataset)return;$('region').value=b.dataset.region;render();}));
@@ -68,14 +68,16 @@ function setZoom(value){zoom=Math.max(1,Math.min(2.5,value));const w=560/zoom,h=
 $('map-in').addEventListener('click',()=>setZoom(zoom+.25));
 $('map-out').addEventListener('click',()=>setZoom(zoom-.25));
 $('map-reset').addEventListener('click',()=>setZoom(1));
-fetch('data/pakistan.geojson').then(r=>{if(!r.ok)throw Error();return r.json();}).then(geo=>{
+fetch('data/pakistan-districts.geojson').then(r=>{if(!r.ok)throw Error();return r.json();}).then(geo=>{
  const project=([lon,lat])=>[50+(lon-60)*24,400-(lat-24)*28];
  const ringPath=ring=>ring.map((p,i)=>(i?'L':'M')+project(p).join(',')).join(' ')+' Z';
- const outlines=geo.features.map(f=>{const polygons=f.geometry.type==='Polygon'?[f.geometry.coordinates]:f.geometry.coordinates;return `<path class="country-outline" d="${polygons.flatMap(p=>p.map(ringPath)).join(' ')}"/>`;}).join('');
+ const districtIds={'Quetta':1,'Pishin':2,'Qilla Abdullah':3};
+ const palette=['#cedfba','#efd7a4','#c9dfe3','#d9cce4','#e7c7b9','#c5dbca'];
+ const outlines=geo.features.map((f,i)=>{const polygons=f.geometry.type==='Polygon'?[f.geometry.coordinates]:f.geometry.coordinates;const name=f.properties.name,id=districtIds[name];return `<path class="country-outline ${id?'study-district':''}" ${id?`data-id="${id}" role="button" tabindex="0" aria-label="Filter to ${name}"`:''} style="fill:${id?'#d69d39':palette[i%palette.length]}" d="${polygons.flatMap(p=>p.map(ringPath)).join(' ')}"><title>${name}${id?' · select to filter':''}</title></path>`;}).join('');
  const places=[{id:1,name:'Quetta',p:[66.99,30.18],y:260},{id:2,name:'Pishin',p:[66.99,30.58],y:213},{id:3,name:'Killa Abdullah',p:[66.66,30.73],y:166}];
- const markers=places.map(place=>{const [x,y]=project(place.p);return `<g class="district-marker selected" data-id="${place.id}" role="button" tabindex="0" aria-label="Filter to ${place.name}"><title>Select ${place.name}</title><path class="leader" d="M${x},${y} L310,${place.y} L340,${place.y}"/><circle class="marker-hit" cx="${x}" cy="${y}" r="10"/><circle class="marker-dot" cx="${x}" cy="${y}" r="4"/><rect class="marker-label" x="340" y="${place.y-15}" width="143" height="30" rx="4"/><text x="351" y="${place.y+4}">${place.name} ↗</text></g>`;}).join('');
+ const markers=places.map(place=>{const [x,y]=project(place.p);return `<g class="district-marker selected" data-id="${place.id}" role="button" tabindex="0" aria-label="Filter to ${place.name}"><title>Select ${place.name}</title><path class="leader" d="M${x},${y} L310,${place.y} L340,${place.y}"/><circle class="marker-hit" cx="${x}" cy="${y}" r="10"/><circle class="marker-dot" cx="${x}" cy="${y}" r="4"/><rect class="marker-label" x="340" y="${place.y-15}" width="143" height="30" rx="4"/><text x="351" y="${place.y+4}">${place.name}</text></g>`;}).join('');
  const [qx,qy]=project([66.99,30.18]);
- $('pakistan-map').innerHTML=`<defs><pattern id="map-grid" width="20" height="20" patternUnits="userSpaceOnUse"><circle cx="1" cy="1" r=".7" fill="#ddd"/></pattern></defs><rect x="0" y="0" width="560" height="430" fill="url(#map-grid)"/>${outlines}<text x="255" y="99" class="country-label">PAKISTAN</text><text x="120" y="266" class="province-label">BALOCHISTAN</text><circle class="study-halo" cx="${qx}" cy="${qy-7}" r="28"/>${markers}<text x="60" y="403" class="sea-label">ARABIAN SEA</text>`;
- document.querySelectorAll('.district-marker').forEach(m=>{const select=()=>{if(!dataset)return;$('district').value=m.dataset.id;render();};m.addEventListener('click',select);m.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();select();}});});
+ $('pakistan-map').innerHTML=`<defs><pattern id="map-grid" width="20" height="20" patternUnits="userSpaceOnUse"><circle cx="1" cy="1" r=".7" fill="#a6c9d5"/></pattern></defs><rect x="0" y="0" width="560" height="430" fill="#e4f0f4"/><rect x="0" y="0" width="560" height="430" fill="url(#map-grid)"/>${outlines}<text x="260" y="99" class="country-label">PAKISTAN</text><text x="98" y="150" class="neighbor-label">AFGHANISTAN</text><text x="52" y="275" class="neighbor-label">IRAN</text><text x="382" y="325" class="neighbor-label">INDIA</text><g class="north-arrow" transform="translate(505,46)"><path d="M0,0 L-5,16 L0,12 L5,16 Z"/><text x="0" y="-7" text-anchor="middle">N</text></g><text x="120" y="266" class="province-label">BALOCHISTAN</text><circle class="study-halo" cx="${qx}" cy="${qy-7}" r="28"/>${markers}<text x="60" y="403" class="sea-label">ARABIAN SEA</text>`;
+ document.querySelectorAll('.district-marker, .study-district').forEach(m=>{const select=()=>{if(!dataset)return;$('district').value=m.dataset.id;render();};m.addEventListener('click',select);m.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();select();}});});
  syncMap();
 }).catch(()=>{$('pakistan-map').outerHTML='<p class="empty">Map could not load. Use the district buttons to explore the study area.</p>';});
