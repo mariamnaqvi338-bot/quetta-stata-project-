@@ -1,0 +1,17 @@
+cff-version: 1.2.0
+message: "Please cite this repository when referencing its original analysis or dashboard. Cite the Pakistan Bureau of Statistics separately for the survey data."
+type: software
+title: "Labour Force Structure in Quetta Division"
+authors:
+  - family-names: "Naqvi"
+    given-names: "Syeda Mariam"
+repository-code: "https://github.com/mariamnaqvi338-bot/quetta-stata-project-"
+url: "https://mariamnaqvi338-bot.github.io/quetta-stata-project-/"
+abstract: "An interactive dashboard and research archive examining employment, educational attainment, and demographic variation in Quetta Division using Pakistan's Labour Force Survey 2020–21."
+keywords:
+  - labour force
+  - Quetta
+  - Pakistan
+  - Stata
+  - survey analysis
+  - data visualization

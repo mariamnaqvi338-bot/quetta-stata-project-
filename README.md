@@ -1,72 +1,110 @@
-# Labor Force Structure in Quetta Division
+# Labour Force Structure in Quetta Division
 
-**Syeda Mariam Naqvi**
+**Syeda Mariam Naqvi** · Independent empirical research
+**Pakistan Bureau of Statistics · Labour Force Survey 2020–21**
 
-An independent empirical study of employment, educational attainment, and demographic differences in Quetta Division, Balochistan, Pakistan.
+[**Explore the interactive dashboard ↗**](https://mariamnaqvi338-bot.github.io/quetta-stata-project-/) · [**Read the report**](research/report/quetta-labor-force-report.pdf) · [**View the Stata analysis**](research/stata/finalprojectmariam.do) · [**Read the analytical log**](research/stata/analysis-log.txt)
 
-## Abstract
+![Dashboard overview showing the analytical sample, geographic coverage, and descriptive indicators](docs/screenshots/dashboard-overview.png)
 
-This repository brings together a research report, Stata analytical materials, the underlying uploaded Quetta labor-force extract, and an interactive dashboard. The study examines how economic activity, educational attainment, and marital status vary across age, gender, and rural–urban settlement categories. The analytical sample comprises **9,652 respondents** across Quetta, Pishin, and Killa Abdullah, using the division definition represented in the supplied survey extract. Weighted descriptive statistics complement the report’s unweighted hypothesis tests. The results describe associations within a cross-sectional survey; they do not identify causal mechanisms.
+## Research overview
 
-## Research questions
+This study examines employment, educational attainment, and demographic variation in Quetta Division using Pakistan’s Labour Force Survey 2020–21. The analytical sample comprises **9,652 respondents** across **Quetta, Pishin, and Killa Abdullah** under the geography represented in the supplied extract. Weighted descriptive analysis is accompanied by unweighted chi-square tests and independent-samples t-tests documented in the historical Stata materials.
 
-1. How are employment and unemployment distributed across age groups?
-2. How do educational attainment and economic activity differ by gender and settlement type?
-3. How are marital status, education, and employment associated within the observed sample?
+The research addresses three questions:
 
-## Analytical workflow
+1. How are employment, unemployment, and labour-force participation distributed across age groups?
+2. How do educational attainment and economic activity vary by gender and rural–urban settlement?
+3. How are marital status, educational attainment, and employment associated within the observed sample?
 
-The study imports and screens the PBS microdata in Stata, isolates Quetta Division, constructs ten age groups and seven education categories, and derives employment, unemployment, labor-force, and student indicators. Weighted tables and graphs compare economic activity, education, and marital status by age, gender, and rural–urban settlement. Unweighted chi-square tests assess categorical associations, while independent-samples t-tests compare mean age across selected demographic groups.
+**Methods and technical competencies:** microdata screening and management; variable construction; survey-weighted descriptive statistics; demographic disaggregation; statistical visualization; chi-square tests; independent-samples t-tests; Stata programming; and reproducible data presentation.
 
-See [analytical scope and variable construction](research/METHODS.md) for the exact implemented rules, the complete test scope, and the distinction between the author’s analytical definitions and the official PBS coding scheme. A year-wise employment/enrollment analysis is outside this study’s scope; no time-series claims are made.
+## Selected descriptive findings
 
-## Interactive dashboard
+The following estimates are recomputed from the current cleaned extract, rather than copied from the report’s narrative. Weighted estimates and sample counts are distinct.
 
-The dashboard combines a monochrome visual design with violet and amber accents. Users may select age, gender, settlement type, and district; switch between weighted estimates and sample counts; explore labor-force, education, and demographic panels; and download filtered age summaries. A colorful Pakistan district map highlights the three study locations, with clickable district shapes and markers linked to filters. Historical boundaries provide geographic context rather than an exact representation of the 2020–21 survey geography. Colors distinguish areas and do not encode statistical values. Zoom controls and equivalent keyboard-accessible district buttons are available.
+| Indicator | Result | Interpretation |
+| --- | ---: | --- |
+| Analytical sample | 9,652 respondents | Unweighted number of survey records |
+| Employed respondents | 2,121 | Unweighted count |
+| Unemployed respondents | 98 | Unweighted count |
+| Weighted labour force | 881,078 | Sum of weights for employed or unemployed respondents |
+| Weighted unemployment rate | 3.44% | Weighted unemployed / weighted labour force |
+| Ages 20–29: share of weighted employment | 31.1% | Share of all weighted employed people, not an age-specific employment rate |
+| Ages 20–29: share of weighted unemployment | 60.8% | Share of all weighted unemployed people, not the youth unemployment rate |
 
-For local use, run from the repository root:
+These results describe a cross-sectional survey extract, not current population conditions or causal effects. The dashboard makes denominators explicit and preserves unclassified records.
+
+## Interactive geographic coverage
+
+![Colorful Pakistan district map highlighting Quetta, Pishin, and Killa Abdullah](docs/screenshots/pakistan-district-map.png)
+
+The map links the three highlighted study districts to the dashboard’s filters. Users can combine district, settlement, gender, and age selections, switch between survey-weighted estimates and sample counts, and export filtered summaries. Historical district boundaries provide orientation and may differ from the survey or current administrative geography. Map colors distinguish areas; they do not encode statistical values.
+
+## Educational attainment and demographic comparisons
+
+![Educational attainment and student enrolment charts from the interactive dashboard](docs/screenshots/education-analysis.png)
+
+Ten age groups span 0–9 through 90+. Education, marital status, economic activity, and student enrolment can be examined within selected subgroups. Employment and unemployment figures use explicit counts or shares, while indicator cards distinguish population-based participation from labour-force-based unemployment.
+
+<details>
+<summary><strong>Mobile dashboard preview</strong></summary>
+
+<img src="docs/screenshots/mobile-dashboard.png" alt="Mobile layout of the Quetta dashboard" width="300">
+
+</details>
+
+## Stata analytical record
+
+The [do-file](research/stata/finalprojectmariam.do) contains the supplied analytical commands. The [readable log](research/stata/analysis-log.txt) and [original SMCL log](research/stata/analysis.smcl) document historical output. These files provide more useful analytical evidence than screenshots of code alone.
+
+![Rendered excerpt from the supplied Stata log showing employment status by gender and the reported Pearson chi-square result](docs/screenshots/stata-output-excerpt.png)
+
+*This is a rendered excerpt of the supplied log, not a native Stata interface screenshot or a newly executed test. Counts and tests in this excerpt are unweighted; reported p = 0.000 denotes p < 0.001.*
+
+## Repository contents
+
+| Material | File or directory |
+| --- | --- |
+| Interactive dashboard | [index.html](index.html), [app.js](app.js), [style.css](style.css) |
+| Research report, without its cover page | [PDF](research/report/quetta-labor-force-report.pdf) · [Word](research/report/quetta-labor-force-report.docx) |
+| Author-confirmed Stata do-file | [finalprojectmariam.do](research/stata/finalprojectmariam.do) |
+| Supplied historical Stata output | [Readable text](research/stata/analysis-log.txt) · [SMCL](research/stata/analysis.smcl) |
+| Portable descriptive Stata runner | [run-analysis.do](research/stata/run-analysis.do) |
+| Latest cleaned Quetta dataset | [finalprojectmariam.dta](research/data/finalprojectmariam.dta) |
+| Original national raw archive | [LFS2020-21_Microdata_STATA.zip](research/source/LFS2020-21_Microdata_STATA.zip) |
+| Source inventory and checksums | [Source documentation](research/source/README.md) · [Metadata](research/source/metadata.json) |
+| Analytical definitions and test scope | [METHODS.md](research/METHODS.md) |
+| Supplementary recomputed figures | [PDF](research/figures/research-figures.pdf) · [PNG files](research/figures/) |
+| Browser-ready aggregate cells | [quetta.json](data/quetta.json) |
+| Preparation and verification utilities | [scripts/](scripts/) |
+| Repository screenshots | [docs/screenshots/](docs/screenshots/) |
+
+The report retains its original analytical body and adds redesigned supplementary figures. The cleaned binary dataset is unchanged. Introductory identifying comment lines unrelated to the analysis were omitted from the public Stata presentation; analytical commands were preserved.
+
+## Data provenance and measurement
+
+**Source:** Pakistan Bureau of Statistics, *Labour Force Survey 2020–21*. The original archive contains 570,991 records. Filtering `PCode` to prefix `41` yields the 9,652 Quetta respondents used here. All **165 original survey columns** and all selected records match the cleaned extract in order, ignoring storage-dtype differences.
+
+The dashboard uses the latest author-supplied `finalprojectmariam.dta`. Its binary `student` indicator corresponds to `S4C10` codes 2–15. Gender and marital status are adapted in memory from `S4C5` and valid `S4C7` codes when derived names are absent. Education code `0` represents 1,845 unclassified entries; the historical do-file represents those entries as missing instead. Neither adaptation modifies the source dataset.
+
+Weighted counts sum `Weights`; sample counts enumerate respondents. Labour force comprises employed or unemployed respondents. The unemployment rate divides unemployed by labour force. Participation divides labour force by the full selected population, including children when selected, so it is **not a conventional working-age participation rate**. The 3,143 respondents aged 0–9 are not classified as either in or outside the labour force by the supplied indicators; they remain explicitly unclassified.
+
+The raw file embeds value labels for province, settlement, and gender only. Education labels reproduce the supplied analytical mapping and have not been independently verified against an official PBS codebook. The author’s analytical outline is documented in [METHODS.md](research/METHODS.md); it is not presented as the official coding scheme.
+
+## Reproduce the descriptive workflow
+
+### View the dashboard locally
+
+From the repository root:
 
 ```sh
 python -m http.server 8000 --directory .
 ```
 
-Open `http://localhost:8000` on the same computer. For the hosted version, use the URL provided under repository **Settings → Pages**. Deployment from `main`, `/ (root)` requires no build process, backend, or API credentials.
+Open `http://localhost:8000` on the same computer. The public dashboard requires no installation, backend, or API credentials.
 
-## Research materials
-
-| Material | Location | Description |
-| --- | --- | --- |
-| Research report | [PDF](research/report/quetta-labor-force-report.pdf) · [Word](research/report/quetta-labor-force-report.docx) | Full narrative analysis, tables, and figures |
-| Supplied Stata commands | [finalprojectmariam.do](research/stata/finalprojectmariam.do) | Historical analysis script; retains its original Windows input path |
-| Latest readable Stata output | [analysis-log.txt](research/stata/analysis-log.txt) | Author’s latest pasted transcript of the SMCL log; browser-readable text |
-| Original Stata output | [analysis.smcl](research/stata/analysis.smcl) | Historical output log; open with Stata Viewer |
-| Portable Stata runner | [run-analysis.do](research/stata/run-analysis.do) | Additional runner for descriptive tables and selected tests using the included prepared extract |
-| Redesigned figures | [PDF](research/figures/research-figures.pdf) · [PNG files](research/figures/) | Recomputed economic-activity, education, and settlement comparisons |
-| Original raw archive | [ZIP](research/source/LFS2020-21_Microdata_STATA.zip) · [coding metadata](research/source/README.md) | Supplied raw LFS file, unchanged; embedded labels and provenance checks |
-| Survey extract | [finalprojectmariam.dta](research/data/finalprojectmariam.dta) | Supplied respondent-level Quetta dataset, approximately 18 MB |
-| Dashboard aggregates | [quetta.json](data/quetta.json) | 725 aggregate cells used by the browser |
-| Data preparation | [prepare_data.py](scripts/prepare_data.py) | Rebuilds the dashboard aggregates from the supplied extract |
-
-The report’s cover/title page has been removed from the PDF and Word copies, and introductory Stata comment headers were adapted for independent publication. A supplementary section adds redesigned, independently recomputed descriptive figures; the original body and its historical charts are retained. The report’s analytical body, historical Stata commands and results, and the binary `.dta` dataset have not been substantively revised. Historical scripts and log paths may reference the author’s original local environment.
-
-## Data and measurement
-
-**Source:** Pakistan Bureau of Statistics (PBS), *Labour Force Survey 2020–21*, Quetta Division extract supplied by the author. Division code `41` is identified by the first two characters of `PCode`. The survey extract explicitly names the districts `QUETTA`, `PISHIN`, and `KILLA ABDULLAH`; district filters use those names rather than an assumed current administrative geography.
-
-The dashboard preserves the supplied derived variables: `age_group`, `edu_level`, `employed`, `unemployed`, `not_in_labor_force`, `labor_force`, `student_status`, `marital_status`, and `gender`. Weighted counts sum `Weights`; sample counts enumerate respondents. The extract contains 2,121 employed respondents, 98 unemployed respondents, and 4,290 respondents flagged outside the labor force. A further 3,143 respondents aged 0–9 are unclassified by those indicators and are retained explicitly.
-
-- **Labor force:** respondents flagged as employed or unemployed.
-- **Participation:** labor force divided by the entire selected population. When children are selected, this differs from a conventional working-age labor force participation rate.
-- **Unemployment rate:** unemployed divided by the selected labor force.
-- **Education:** the original mapping of `S4C9` codes 1–7 is reproduced. Labels have not been independently checked against the PBS codebook; missing and unmapped categories remain visible.
-
-The separate research-notes panel quotes selected unweighted tests from the report. They do not update with dashboard filters and have not been independently replicated as complex-survey tests. Reported `0.000` p-values are displayed as `<0.001`.
-
-## Reproducibility
-
-### Dashboard data
-
-Python 3 and the packages in `requirements-data.txt` are needed only to regenerate aggregates:
+### Regenerate aggregates and figures
 
 ```sh
 python -m pip install -r requirements-data.txt
@@ -76,44 +114,48 @@ python -m unittest discover -s tests
 node --check app.js
 ```
 
-The aggregate JSON records the SHA-256 of the source dataset. Viewing the dashboard requires only a browser and static HTTP hosting.
+To verify raw-data provenance, extract the original ZIP outside the repository, then run:
 
-### Stata
+```sh
+python scripts/verify_raw.py /path/to/LFS2020-21.dta
+```
 
-From the repository root, in an installed Stata environment:
+The uncompressed national dataset is approximately 1.04 GB. Its unchanged compressed archive is retained in the repository; the uncompressed copy is not committed.
+
+### Run the Stata companion
+
+From the repository root in an installed Stata environment:
 
 ```stata
 do research/stata/run-analysis.do
 ```
 
-The portable runner uses existing variables in the prepared dataset; the historical `finalprojectmariam.do` instead expects an original raw input at a Windows-specific path and generates those variables. Neither Stata execution nor statistical-test replication has been validated in this environment because Stata is unavailable.
+The portable runner adapts the cleaned file in memory and produces selected descriptive tables and tests. The author’s complete historical do-file starts from a Windows-specific raw-data path, which must be adapted before use. The historical log includes an initial missing-path error followed by analytical output; it is not evidence of a clean execution in a new environment. Stata is unavailable in the dashboard development environment, so these commands have not been independently rerun there.
 
-## Limitations and data stewardship
+### Refresh repository screenshots
 
-The findings pertain to the supplied 2020–21 extract and its survey geography. No survey-design standard errors or confidence intervals are calculated by the dashboard, and small subgroups may produce unstable estimates. The report’s narrative interpretations should be considered alongside the descriptive evidence; association does not demonstrate causation.
+With the local dashboard server running, install Playwright and a supported Chromium browser, then run:
 
-The dashboard consumes aggregated data, but the separately downloadable `.dta` is the supplied respondent-level file and retains survey identifiers. It should not be described as anonymized. Consult the originating data provider’s applicable access and redistribution terms before further redistribution; this repository does not assign a new license to the source survey data.
+```sh
+python scripts/capture_screenshots.py http://localhost:8000
+```
 
-## Geographic attribution
+The capture utility renders actual dashboard views and an explicitly labeled excerpt from the supplied log. It does not simulate a Stata application window.
 
-The locally bundled Pakistan outline comes from [johan/world.geo.json](https://github.com/johan/world.geo.json/blob/master/countries/PAK.geo.json), a Natural Earth-derived dataset. It is a generalized cartographic locator, not an authoritative statement of boundaries or territorial status. The atlas-style district layer is simplified from [Click That Hood’s Pakistan dataset](https://github.com/codeforgermany/click_that_hood/blob/main/public/data/pakistan.geojson), attributed there to DIVA-GIS. These historical district geometries may differ from survey or current boundaries. District point locations are approximate. Rural and urban are survey classifications, not mapped polygons. Glacial Indifference is bundled locally in regular, italic, and bold weights under the SIL Open Font License; see `assets/fonts/OFL.txt`. The map, typography, and charts require no external service.
+## Interpretation and limitations
 
-## Validation
+- The findings refer to the 2020–21 extract and its survey geography. A year-wise employment/enrolment analysis is outside this study’s scope.
+- The dashboard does not calculate complex-survey standard errors or confidence intervals. Small subgroups may yield unstable estimates.
+- Reported hypothesis tests are unweighted historical results and do not update when dashboard filters change. Associations do not establish causal mechanisms.
+- Raw and cleaned datasets contain respondent-level survey records and identifiers. They should not be described as anonymized. Consult PBS access and redistribution terms before further redistribution.
 
-Automated checks verify sample totals, weighted indicator partitions, permitted aggregate fields, and district totals. Browser smoke checks cover combined filters, selectable map markers, zoom, topic panels, CSV export, download links, mobile overflow, and JavaScript errors. These checks validate the dashboard implementation rather than the underlying survey instrument or the report’s inferential claims.
+## Attribution and citation
 
-## Figure design
+**Research and analytical materials:** Syeda Mariam Naqvi.
+**Survey:** Pakistan Bureau of Statistics, *Labour Force Survey 2020–21*.
+**District geometry:** [Click That Hood Pakistan dataset](https://github.com/codeforgermany/click_that_hood/blob/main/public/data/pakistan.geojson), attributed there to DIVA-GIS; simplified for web presentation. A generalized Natural Earth-derived outline is retained from [johan/world.geo.json](https://github.com/johan/world.geo.json/blob/master/countries/PAK.geo.json).
+**Typeface:** Glacial Indifference, locally bundled under the [SIL Open Font License](assets/fonts/OFL.txt).
 
-Redesigned figures use readable labels, a consistent monochrome/violet/amber palette, sample-size context, and explicit denominators. Employment and unemployment counts use separate panels because their scales differ substantially. Education compares weighted distributions within gender, including unclassified records; settlement panels show full-population participation and labor-force unemployment separately. These supplementary figures describe the entire uploaded sample, while browser charts respond to filters. Source: Pakistan Bureau of Statistics, Labour Force Survey 2020–21.
+To cite this repository, use [CITATION.cff](CITATION.cff) or GitHub’s **Cite this repository** feature.
 
-## Raw-data provenance check
-
-The original PBS archive is retained in `research/source/` without recompression. Its uncompressed Stata file is approximately 1.04 GB and is not committed separately. The Quetta subset was compared against the prepared extract across all original columns and records, with storage-dtype differences ignored. See [source metadata](research/source/metadata.json) for counts and checksums. The archive contains no separate coding-scheme document: only province, settlement, and gender value labels are embedded. Education and labor-market definitions therefore remain subject to the official questionnaire and the documented limitations above.
-
-## Latest cleaned source files
-
-The dashboard now uses the author’s latest `finalprojectmariam.dta` and includes the corresponding `finalprojectmariam.do`. The binary dataset is preserved exactly. It contains the same 9,652 Quetta respondents and original survey columns as the earlier extract. Education category `0` represents the 1,845 previously missing/unclassified entries; the binary enrollment indicator is named `student`. The dashboard reads gender from `S4C5`, marital status from valid `S4C7` codes, and student status from `student` when derived field names are absent. These adaptations happen in memory only.
-
-The authoritative do-file is the text most recently supplied by the author, saved as `finalprojectmariam.do`. It starts from the original national raw data at a Windows-specific path and defines a binary student indicator using `S4C10` codes 2–15, consistent with the cleaned dataset’s `student` field. The script uses missing values for unclassified education, whereas the latest cleaned dataset uses category `0`; both are displayed as unclassified. The historical report and SMCL output predate these latest uploads; reported tests remain attributed to those historical materials rather than claimed as rerun results. Introductory personal/course comment lines are omitted for the independent presentation; analytical commands are preserved.
-
-The most recently pasted output is published as `analysis-log.txt` because it contains rendered text rather than SMCL directives. The earlier uploaded `.smcl` is retained for Stata Viewer. Both preserve analytical output; course/personal introductory comment lines are omitted. The transcript records an initial missing Windows-path error (`r(601)`) and subsequent statistical results, so it is a historical analysis record rather than a verified clean execution in a new session.
+© 2025 Syeda Mariam Naqvi. All rights reserved. This notice applies to original author materials; source data, geographic assets, and fonts remain subject to their respective terms. No general open-source license is granted by this repository.
