@@ -7,6 +7,29 @@
 
 ![Dashboard overview showing the analytical sample, geographic coverage, and descriptive indicators](docs/screenshots/dashboard-overview.png)
 
+## Project organization
+
+```text
+quetta-stata-project-/
+├── README.md                  Research overview and dashboard previews
+├── CITATION.cff               Citation metadata
+├── data/                      Dashboard aggregates and data dictionary
+├── analysis/                  Analytical workflow and methodology
+├── visuals/                   Index of figures and screenshot evidence
+├── results/                   Summary tables and key findings
+├── docs/screenshots/          Dashboard and analytical-output previews
+├── research/
+│   ├── report/                PDF and editable research report
+│   ├── stata/                 Author’s do-file, logs, and portable runner
+│   ├── data/                  Unchanged cleaned Quetta dataset
+│   ├── source/                Original archive and provenance metadata
+│   └── figures/               Recomputed figures and figure PDF
+├── scripts/                   Preparation, export, and verification utilities
+└── tests/                     Aggregate-data checks
+```
+
+Start with the [data dictionary](data/data_dictionary.md), [methodology](analysis/methodology.md), [visual evidence](visuals/README.md), and [key findings](results/key_findings.md). Download [summary tables as CSV](results/summary_tables.csv) for the full sample and separate age, district, settlement, and gender breakdowns. Established source-file locations are retained so existing dashboard downloads continue to work.
+
 ## Research overview
 
 This study examines employment, educational attainment, and demographic variation in Quetta Division using Pakistan’s Labour Force Survey 2020–21. The analytical sample comprises **9,652 respondents** across **Quetta, Pishin, and Killa Abdullah** under the geography represented in the supplied extract. Weighted descriptive analysis is accompanied by unweighted chi-square tests and independent-samples t-tests documented in the historical Stata materials.
@@ -112,6 +135,7 @@ Open `http://localhost:8000` on the same computer. The public dashboard requires
 python -m pip install -r requirements-data.txt
 python scripts/prepare_data.py research/data/finalprojectmariam.dta
 python scripts/render_figures.py
+python scripts/export_results.py
 python -m unittest discover -s tests
 node --check app.js
 ```
