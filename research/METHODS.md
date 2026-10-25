@@ -45,3 +45,7 @@ The historical script and output log remain the analytical record. Dashboard res
 The original raw archive, prepared dataset, supplied Stata script, output log, and report are included in this repository. A chunked comparison established that all 165 original columns and all 9,652 selected Quetta records match the prepared extract in order, ignoring storage-dtype differences. That check verifies provenance, not the substantive accuracy of derived variable definitions.
 
 The raw archive embeds value labels for province, region, and gender only. The author’s analytical outline supplies additional intended mappings, but a separate official coding document is still needed to independently verify education and labor-market response meanings.
+
+## Latest cleaned extract
+
+The current source is `finalprojectmariam.dta`. Its binary `student` equals the indicator for `S4C10` in 2–15, and education category `0` is retained as unclassified. The importer adapts raw `S4C5` and `S4C7` to dashboard gender and marital categories in memory. The authoritative `finalprojectmariam.do` is the latest pasted script supplied by the author. Its binary `student_status` rule matches the delivered dataset’s `student` field. The script leaves unmapped education missing, while the latest cleaned dataset codes it as `0`; the dashboard retains both as unclassified.

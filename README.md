@@ -37,12 +37,13 @@ Open `http://localhost:8000` on the same computer. For the hosted version, use t
 | Material | Location | Description |
 | --- | --- | --- |
 | Research report | [PDF](research/report/quetta-labor-force-report.pdf) · [Word](research/report/quetta-labor-force-report.docx) | Full narrative analysis, tables, and figures |
-| Supplied Stata commands | [analysis.do](research/stata/analysis.do) | Historical analysis script; retains its original Windows input path |
-| Supplied Stata output | [analysis.smcl](research/stata/analysis.smcl) | Historical output log; open with Stata Viewer |
+| Supplied Stata commands | [finalprojectmariam.do](research/stata/finalprojectmariam.do) | Historical analysis script; retains its original Windows input path |
+| Latest readable Stata output | [analysis-log.txt](research/stata/analysis-log.txt) | Author’s latest pasted transcript of the SMCL log; browser-readable text |
+| Original Stata output | [analysis.smcl](research/stata/analysis.smcl) | Historical output log; open with Stata Viewer |
 | Portable Stata runner | [run-analysis.do](research/stata/run-analysis.do) | Additional runner for descriptive tables and selected tests using the included prepared extract |
 | Redesigned figures | [PDF](research/figures/research-figures.pdf) · [PNG files](research/figures/) | Recomputed economic-activity, education, and settlement comparisons |
 | Original raw archive | [ZIP](research/source/LFS2020-21_Microdata_STATA.zip) · [coding metadata](research/source/README.md) | Supplied raw LFS file, unchanged; embedded labels and provenance checks |
-| Survey extract | [quetta-lfs-2020-21.dta](research/data/quetta-lfs-2020-21.dta) | Supplied respondent-level Quetta dataset, approximately 18 MB |
+| Survey extract | [finalprojectmariam.dta](research/data/finalprojectmariam.dta) | Supplied respondent-level Quetta dataset, approximately 18 MB |
 | Dashboard aggregates | [quetta.json](data/quetta.json) | 725 aggregate cells used by the browser |
 | Data preparation | [prepare_data.py](scripts/prepare_data.py) | Rebuilds the dashboard aggregates from the supplied extract |
 
@@ -69,7 +70,7 @@ Python 3 and the packages in `requirements-data.txt` are needed only to regenera
 
 ```sh
 python -m pip install -r requirements-data.txt
-python scripts/prepare_data.py research/data/quetta-lfs-2020-21.dta
+python scripts/prepare_data.py research/data/finalprojectmariam.dta
 python scripts/render_figures.py
 python -m unittest discover -s tests
 node --check app.js
@@ -85,7 +86,7 @@ From the repository root, in an installed Stata environment:
 do research/stata/run-analysis.do
 ```
 
-The portable runner uses existing variables in the prepared dataset; the historical `analysis.do` instead expects an original raw input at a Windows-specific path and generates those variables. Neither Stata execution nor statistical-test replication has been validated in this environment because Stata is unavailable.
+The portable runner uses existing variables in the prepared dataset; the historical `finalprojectmariam.do` instead expects an original raw input at a Windows-specific path and generates those variables. Neither Stata execution nor statistical-test replication has been validated in this environment because Stata is unavailable.
 
 ## Limitations and data stewardship
 
@@ -108,3 +109,11 @@ Redesigned figures use readable labels, a consistent monochrome/violet/amber pal
 ## Raw-data provenance check
 
 The original PBS archive is retained in `research/source/` without recompression. Its uncompressed Stata file is approximately 1.04 GB and is not committed separately. The Quetta subset was compared against the prepared extract across all original columns and records, with storage-dtype differences ignored. See [source metadata](research/source/metadata.json) for counts and checksums. The archive contains no separate coding-scheme document: only province, settlement, and gender value labels are embedded. Education and labor-market definitions therefore remain subject to the official questionnaire and the documented limitations above.
+
+## Latest cleaned source files
+
+The dashboard now uses the author’s latest `finalprojectmariam.dta` and includes the corresponding `finalprojectmariam.do`. The binary dataset is preserved exactly. It contains the same 9,652 Quetta respondents and original survey columns as the earlier extract. Education category `0` represents the 1,845 previously missing/unclassified entries; the binary enrollment indicator is named `student`. The dashboard reads gender from `S4C5`, marital status from valid `S4C7` codes, and student status from `student` when derived field names are absent. These adaptations happen in memory only.
+
+The authoritative do-file is the text most recently supplied by the author, saved as `finalprojectmariam.do`. It starts from the original national raw data at a Windows-specific path and defines a binary student indicator using `S4C10` codes 2–15, consistent with the cleaned dataset’s `student` field. The script uses missing values for unclassified education, whereas the latest cleaned dataset uses category `0`; both are displayed as unclassified. The historical report and SMCL output predate these latest uploads; reported tests remain attributed to those historical materials rather than claimed as rerun results. Introductory personal/course comment lines are omitted for the independent presentation; analytical commands are preserved.
+
+The most recently pasted output is published as `analysis-log.txt` because it contains rendered text rather than SMCL directives. The earlier uploaded `.smcl` is retained for Stata Viewer. Both preserve analytical output; course/personal introductory comment lines are omitted. The transcript records an initial missing Windows-path error (`r(601)`) and subsequent statistical results, so it is a historical analysis record rather than a verified clean execution in a new session.

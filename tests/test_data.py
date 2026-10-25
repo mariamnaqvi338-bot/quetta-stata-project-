@@ -9,7 +9,7 @@ class DataIntegrity(unittest.TestCase):
 
     def test_source_totals(self):
         self.assertEqual(sum(r['n'] for r in self.rows), 9652)
-        for key, expected in [('employed_n', 2121), ('unemployed_n', 98), ('not_in_labor_force_n', 4290), ('labor_force_n', 2219)]:
+        for key, expected in [('employed_n', 2121), ('unemployed_n', 98), ('not_in_labor_force_n', 4290), ('labor_force_n', 2219), ('student_status_n', 1848)]:
             self.assertEqual(sum(r[key] for r in self.rows), expected)
 
     def test_partition_and_weights(self):

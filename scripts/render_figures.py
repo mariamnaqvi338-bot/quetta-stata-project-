@@ -8,7 +8,9 @@ import numpy as np
 import pandas as pd
 
 root=Path(__file__).resolve().parents[1]
-d=pd.read_stata(root/'research/data/quetta-lfs-2020-21.dta',convert_categoricals=False)
+d=pd.read_stata(root/'research/data/finalprojectmariam.dta',convert_categoricals=False)
+if 'gender' not in d:
+    d['gender'] = d.S4C5
 out=root/'research/figures'
 out.mkdir(exist_ok=True)
 plt.rcParams.update({'font.family':'DejaVu Sans','font.size':10,'axes.spines.top':False,'axes.spines.right':False,'axes.spines.left':False,'axes.edgecolor':'#dddddf','axes.titleweight':'bold','figure.facecolor':'white','axes.labelcolor':'#55555b','xtick.color':'#66666b','ytick.color':'#66666b'})

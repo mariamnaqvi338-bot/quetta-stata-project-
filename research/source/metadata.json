@@ -188,5 +188,9 @@
     "Weights": ""
   },
   "archive_sha256": "2c48796d6e90648ade9a2f4b718026d1bfce0dd44a53632b66ea81098c59dd0a",
-  "dataset_sha256": "a4d74218739a746216fc5e4c599aa61178c0fd5242c5db5efcb903fce6d65c23"
+  "dataset_sha256": "a4d74218739a746216fc5e4c599aa61178c0fd5242c5db5efcb903fce6d65c23",
+  "prepared_dataset": "research/data/finalprojectmariam.dta",
+  "prepared_sha256": "cbad4a2c982b80717a63b73d7d41560d790ee547b68864c9c6b6cfe70b464773",
+  "authoritative_do_file": "research/stata/finalprojectmariam.do",
+  "prepared_verification": "Latest cleaned dataset: all 9,652 Quetta records and all 165 original survey columns match the raw subset in order, ignoring storage dtypes."
 }

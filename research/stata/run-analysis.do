@@ -5,8 +5,11 @@ clear all
 set more off
 capture log close
 log using "research/stata/local-analysis.smcl", replace
-use "research/data/quetta-lfs-2020-21.dta", clear
+use "research/data/finalprojectmariam.dta", clear
 keep if substr(PCode, 1, 2) == "41"
+* Adapt the latest cleaned extract in memory, leaving the source unchanged.
+gen gender = S4C5
+gen marital_status = S4C7 if inrange(S4C7, 1, 4)
 count
 assert r(N) == 9652
 count if employed == 1
