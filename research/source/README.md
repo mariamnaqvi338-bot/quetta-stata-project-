@@ -5,6 +5,10 @@
 - [Original compressed Stata data](LFS2020-21_Microdata_STATA.zip): approximately 25.5 MB compressed; contains `LFS2020-21.dta`, approximately 1.04 GB uncompressed. The large uncompressed file is not committed.
 - [Extracted metadata and checksums](metadata.json): raw and Quetta sample sizes, embedded value labels, variable-label inventory, SHA-256 hashes, and verification outcome.
 
+## Data ownership
+
+The Labour Force Survey (LFS) 2020–21 data are the property of the Pakistan Bureau of Statistics (PBS). Ownership remains with PBS; inclusion in this repository does not transfer ownership or grant additional reuse or redistribution rights. Use of the data is subject to PBS’s applicable terms and conditions.
+
 ## Coding information available in this upload
 
 The ZIP contains one `.dta` file, with no separate questionnaire or coding-scheme document. All variable-description labels are blank. The following value labels are embedded:

@@ -84,6 +84,8 @@ The report retains its original analytical body and adds redesigned supplementar
 
 ## Data provenance and measurement
 
+**Data ownership:** The Labour Force Survey (LFS) 2020–21 data are the property of the Pakistan Bureau of Statistics (PBS). Ownership remains with PBS; inclusion in this repository does not transfer ownership or grant additional reuse or redistribution rights. Use of the data is subject to PBS’s applicable terms and conditions.
+
 **Source:** Pakistan Bureau of Statistics, *Labour Force Survey 2020–21*. The original archive contains 570,991 records. Filtering `PCode` to prefix `41` yields the 9,652 Quetta respondents used here. All **165 original survey columns** and all selected records match the cleaned extract in order, ignoring storage-dtype differences.
 
 The dashboard uses the latest author-supplied `finalprojectmariam.dta`. Its binary `student` indicator corresponds to `S4C10` codes 2–15. Gender and marital status are adapted in memory from `S4C5` and valid `S4C7` codes when derived names are absent. Education code `0` represents 1,845 unclassified entries; the historical do-file represents those entries as missing instead. Neither adaptation modifies the source dataset.
