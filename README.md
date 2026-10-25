@@ -35,6 +35,7 @@ Open `http://localhost:8000` on the same computer. For the hosted version, use t
 | Supplied Stata output | [analysis.smcl](research/stata/analysis.smcl) | Historical output log; open with Stata Viewer |
 | Portable Stata runner | [run-analysis.do](research/stata/run-analysis.do) | Additional runner for descriptive tables and selected tests using the included prepared extract |
 | Redesigned figures | [PDF](research/figures/research-figures.pdf) · [PNG files](research/figures/) | Recomputed economic-activity, education, and settlement comparisons |
+| Original raw archive | [ZIP](research/source/LFS2020-21_Microdata_STATA.zip) · [coding metadata](research/source/README.md) | Supplied raw LFS file, unchanged; embedded labels and provenance checks |
 | Survey extract | [quetta-lfs-2020-21.dta](research/data/quetta-lfs-2020-21.dta) | Supplied respondent-level Quetta dataset, approximately 18 MB |
 | Dashboard aggregates | [quetta.json](data/quetta.json) | 725 aggregate cells used by the browser |
 | Data preparation | [prepare_data.py](scripts/prepare_data.py) | Rebuilds the dashboard aggregates from the supplied extract |
@@ -97,3 +98,7 @@ Automated checks verify sample totals, weighted indicator partitions, permitted 
 ## Figure design
 
 Redesigned figures use readable labels, a consistent monochrome/violet/amber palette, sample-size context, and explicit denominators. Employment and unemployment counts use separate panels because their scales differ substantially. Education compares weighted distributions within gender, including unclassified records; settlement panels show full-population participation and labor-force unemployment separately. These supplementary figures describe the entire uploaded sample, while browser charts respond to filters. Source: Pakistan Bureau of Statistics, Labour Force Survey 2020–21.
+
+## Raw-data provenance check
+
+The original PBS archive is retained in `research/source/` without recompression. Its uncompressed Stata file is approximately 1.04 GB and is not committed separately. The Quetta subset was compared against the prepared extract across all original columns and records, with storage-dtype differences ignored. See [source metadata](research/source/metadata.json) for counts and checksums. The archive contains no separate coding-scheme document: only province, settlement, and gender value labels are embedded. Education and labor-market definitions therefore remain subject to the official questionnaire and the documented limitations above.
