@@ -14,6 +14,12 @@ This repository brings together a research report, Stata analytical materials, t
 2. How do educational attainment and economic activity differ by gender and settlement type?
 3. How are marital status, education, and employment associated within the observed sample?
 
+## Analytical workflow
+
+The study imports and screens the PBS microdata in Stata, isolates Quetta Division, constructs ten age groups and seven education categories, and derives employment, unemployment, labor-force, and student indicators. Weighted tables and graphs compare economic activity, education, and marital status by age, gender, and rural–urban settlement. Unweighted chi-square tests assess categorical associations, while independent-samples t-tests compare mean age across selected demographic groups.
+
+See [analytical scope and variable construction](research/METHODS.md) for the exact implemented rules, the complete test scope, and the distinction between the author’s analytical definitions and the official PBS coding scheme. A year-wise employment/enrollment analysis is outside this study’s scope; no time-series claims are made.
+
 ## Interactive dashboard
 
 The dashboard combines a monochrome visual design with violet and amber accents. Users may select age, gender, settlement type, and district; switch between weighted estimates and sample counts; explore labor-force, education, and demographic panels; and download filtered age summaries. A Pakistan locator highlights the three study locations, with clickable markers linked to district filters. The map provides geographic orientation rather than district boundaries or a choropleth. Zoom controls and equivalent keyboard-accessible district buttons are available.
